@@ -1,3 +1,55 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+app_alimentos_inicio:
+    path: /inicio
+    controller: App\Controller\AlimentosController::inicio
+
+app_alimentos_listar:
+    path: /listar
+    controller: App\Controller\AlimentosController::listar
+
+app_alimentos_insertar:
+    path: /insertar
+    controller: App\Controller\AlimentosController::insertar
+
+app_alimentos_buscarPorNombre:
+    path: /buscarPorNombre
+    controller: App\Controller\AlimentosController::buscarPorNombre
+
+app_alimentos_buscarPorEnergia:
+    path: /buscarPorEnergia
+    controller: App\Controller\AlimentosController::buscarPorEnergia
+
+app_alimentos_buscarAlimentosCombinada:
+    path: /buscarAlimentosCombinada
+    controller: App\Controller\AlimentosController::buscarAlimentosCombinada
+
+app_alimentos_verAlimentos:
+    path: /verAlimentos
+    controller: App\Controller\AlimentosController::verAlimentos
+
+app_alimentos_editarAlimento:
+    path: /editarAlimento
+    controller: App\Controller\AlimentosController::editarAlimento
+
+app_alimentos_borrar:
+    path: /borrar
+    controller: App\Controller\AlimentosController::borrar
+
+app_alimentos_login:
+    path: /login
+    controller: App\Controller\AlimentosController::login
+
+app_alimentos_registro:
+    path: /registro
+    controller: App\Controller\AlimentosController::registro
+
+app_alimentos_cerrar:
+    path: /cerrar
+    controller: App\Controller\AlimentosController::cerrar
+
+app_alimentos_crearPDF:
+    path: /crearPDF
+    controller: App\Controller\AlimentosController::crearPDF

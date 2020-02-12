@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+ <link href="{{ asset('/css/estilo.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+
+
+{% block body %}
+
+<div id="cabecera">
+  <h1>Información de alimentos</h1>
+</div>
+
+<div id="menu">
+<hr/>
+  <a href="{{ path('app_alimentos_inicio')}}">inicio</a> |
+  <a href="{{ path('app_alimentos_listar')}}">ver alimentos</a> |
+  {% if log != "" %}
+  <a href="{{ path('app_alimentos_insertar')}}">insertar alimento</a> |
+  {% endif %}
+  <a href="{{ path('app_alimentos_buscarPorNombre')}}">buscar por nombre</a> |
+  <a href="{{ path('app_alimentos_buscarPorEnergia')}}">buscar por energia</a> |
+  <a href="{{ path('app_alimentos_buscarAlimentosCombinada')}}">búsqueda combinada</a>
+  
+  {% if log != "" %}
+    <span style="float: right; color: red">{{log}}
+		  <a href="{{ path('app_alimentos_cerrar')}}">Cerrar Sesion</a>
+    </span>
+  {% else %}
+    <a href="{{ path('app_alimentos_login')}}" style="float: right">Login</a>
+	{% endif %}
+<hr/>
+</div>
+
+<div id="contenido">
+{% block contenido %}
+
+{% endblock %}
+</div>
+
+<div id="pie">
+<hr/>
+<div align="center">- pie de página -</div>
+</div>
+
+{% block javascript %}
+  <script src="{{ asset('js/jquery-3.4.1.min.js') }}" type="text/javascript" ></script>
+  <script src="{{ asset('js/jquery.colorbox.js') }}" type="text/javascript" ></script>
+  <script>
+    $(document).ready(function(){
+      $(".cajamodal").colorbox();
+    });
+  </script>
+{% endblock %}
+
+
+
+{% endblock %}

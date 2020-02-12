@@ -1,0 +1,25 @@
+{% extends 'alimentos/layout.html.twig' %}
+
+{% block contenido %}
+
+    <h1>Registro</h1>
+    <form name="formRegistro" action="{{ path('app_alimentos_registro') }}" method="POST">
+        <p>Nombre:
+            <input type="text" name="nomUsuario">
+        </p>
+        <p>Contraseña:
+            <input type="password" name="passUsuario">
+        </p>
+        <input type="submit" value="Ingresar">
+    </form>
+
+    
+    <br>
+
+    {% if mensaje is defined %}
+		<b>
+			<span style="color: red;">{{ mensaje }}</span>
+		</b>
+	{% endif %}
+
+  {% endblock %}
