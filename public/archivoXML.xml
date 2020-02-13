@@ -1,0 +1,9 @@
+<?xml version="1.0">
+<alimento>
+<nombre>Patata</nombre>
+<energia>2</energia>
+<proteinas>2</proteinas>
+<hc>2</hc>
+<fibra>2</fibra>
+<grasa>2</grasa>
+</alimento>

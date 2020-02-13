@@ -17,6 +17,7 @@
           <td><a href="{{ path('app_alimentos_editarAlimento', {'id': alimento.id}) }}">Editar</a></td>
           <td><a href="{{ path('app_alimentos_borrar', {'id': alimento.id, 'eliminar': true}) }}">Borrar</a></td>
           {% endif %}
+          <td><a href="{{ path('app_alimentos_verXML', {'id': alimento.id}) }}">XML</a></td>
       </tr>
       {% endfor %}
 

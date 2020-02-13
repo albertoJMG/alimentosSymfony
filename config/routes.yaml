@@ -53,3 +53,7 @@ app_alimentos_cerrar:
 app_alimentos_crearPDF:
     path: /crearPDF
     controller: App\Controller\AlimentosController::crearPDF
+
+app_alimentos_verXML:
+    path: /verXML
+    controller: App\Controller\AlimentosController::verXML

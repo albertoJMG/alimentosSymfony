@@ -3,17 +3,18 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Model\Model;
 use App\Config\Config;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-session_start();
+$session = new Session();
+$session->start();
 
 class AlimentosController extends AbstractController
 {
-
 
     public function inicio()
     {
@@ -23,9 +24,10 @@ class AlimentosController extends AbstractController
         );
         $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario, Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
 
-        $params['log'] = $m->conectado(true);
+        $session= new Session();
+        $params['log'] = $session->get('usuario');
 
-        return $this->render('alimentos/inicio.html.twig',$params);
+        return $this->render('alimentos/inicio.html.twig', $params);
     }
 
     public function crearPDF()
@@ -43,16 +45,16 @@ class AlimentosController extends AbstractController
 
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
-        
+
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
-        
+
         // Retrieve the HTML generated in our twig file
         $html = $this->renderView('alimentos/crearPDF.html.twig', $params);
-        
+
         // Load HTML to Dompdf
         $dompdf->loadHtml($html);
-        
+
         // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
         $dompdf->setPaper('A4', 'portrait');
 
@@ -64,7 +66,7 @@ class AlimentosController extends AbstractController
             "Attachment" => false
         ]);
     }
-    
+
     public function editarAlimento()
     {
         // if (!isset($_GET['id'])) {
@@ -84,10 +86,9 @@ class AlimentosController extends AbstractController
                 if ($m->validarDatos($_POST['nombre'], $_POST['energia'], $_POST['proteina'], $_POST['hc'], $_POST['fibra'], $_POST['grasa']) && $_POST['nombre'] != "") {
 
                     $m->modificarAlimento($_POST['nombre'], $_POST['energia'], $_POST['proteina'], $_POST['hc'], $_POST['fibra'], $_POST['grasa'], $id);
-                    
+
                     $response = $this->forward('App\Controller\AlimentosController::listar');
                     return $response;
-
                 } else {
                     $params = array(
                         'nombre' => $_POST['nombre'],
@@ -101,10 +102,11 @@ class AlimentosController extends AbstractController
                 }
             }
 
-            $params['log'] = $m->conectado(false);
+            $session = new Session();
+            $params['log'] = $session->get('usuario');
         } else {
             $response = $this->forward('App\Controller\AlimentosController::inicio');
-                    return $response;
+            return $response;
         }
 
 
@@ -113,54 +115,46 @@ class AlimentosController extends AbstractController
 
     public function listar()
     {
-        $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario,
-                        Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
-
-        $params = array(
-        'alimentos' => $m->dameAlimentos(),
+        $m = new Model(
+            Config::$mvc_bd_nombre,
+            Config::$mvc_bd_usuario,
+            Config::$mvc_bd_clave,
+            Config::$mvc_bd_hostname
         );
 
-        $params['log'] = $m->conectado(false);
+        $params = array(
+            'alimentos' => $m->dameAlimentos(),
+        );
+
+        $session = new Session();
+        $params['log'] = $session->get('usuario');
 
         return
-         $this->render('alimentos/listar.html.twig', $params);
-
-    
-
-
+            $this->render('alimentos/listar.html.twig', $params);
     }
 
     public function borrar()
     {
-        $m = new Model(Config::$mvc_bd_nombre,Config::$mvc_bd_usuario,Config::$mvc_bd_clave,Config::$mvc_bd_hostname);
-        
+        $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario, Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
+
         $params = array(
             'alimentos' => $m->dameAlimentos(),
         );
 
         if (isset($_REQUEST['eliminar']) && $_REQUEST['eliminar'] == true) {
-            // if (!isset($_GET['id'])) {
-            //     throw new Exception('Página no encontrada');
-            // }
             $id = (int) $_GET['id'];
             if (isset($_SESSION['usuario'])) {
-                $m = new Model(Config::$mvc_bd_nombre,Config::$mvc_bd_usuario,Config::$mvc_bd_clave,Config::$mvc_bd_hostname);
+                $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario, Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
                 $m->eliminar($id);
                 $response = $this->forward('App\Controller\AlimentosController::listar');
                 return $response;
-
-            }else{
+            } else {
                 $response = $this->forward('App\Controller\AlimentosController::inicio');
                 return $response;
-                
             }
-
-            //return $this->render('alimentos/listar.html.twig', $params);
         }
-        $params['log'] = $m->conectado(false);
-
-        //return $this->render('alimentos/listar.html.twig', $params);
-        
+        $session = new Session();
+        $params['log'] = $session->get('usuario');
     }
 
     public function login()
@@ -182,8 +176,10 @@ class AlimentosController extends AbstractController
             if ($params['resultado'] == null) {
                 $params['mensaje'] = 'No se han encontrado usuario con esos datos, o los datos son erroneos. Pruebe otra vez';
             } else {
-                $_SESSION['usuario'] = $_POST['nomUsuario'];
-                $params['log'] = $_SESSION['usuario'];
+                $session = new Session();
+                $session->set('usuario', $_POST['nomUsuario']);
+                // $_SESSION['usuario'] = $_POST['nomUsuario'];
+                $params['log'] = $session->get('usuario');
 
                 $response = $this->forward('App\Controller\AlimentosController::inicio');
                 return $response;
@@ -215,9 +211,9 @@ class AlimentosController extends AbstractController
                 if ($existeUsuario == null) {
                     $pass = password_hash($password, PASSWORD_DEFAULT);
                     $m->insertarUsuario($usuario, $pass, true);
-                    $params['mensaje']= 'Registrado correctamente';
+                    $params['mensaje'] = 'Registrado correctamente';
                     $response = $this->forward('App\Controller\AlimentosController::login');
-                return $response;
+                    return $response;
                 } else {
                     $params = array(
                         'usuario' => $_POST['nomUsuario'],
@@ -239,9 +235,9 @@ class AlimentosController extends AbstractController
 
     public function cerrar()
     {
-	    session_unset();
-	    session_destroy();
-	    $response = $this->forward('App\Controller\AlimentosController::inicio');
+        session_unset();
+        session_destroy();
+        $response = $this->forward('App\Controller\AlimentosController::inicio');
         return $response;
         //require __DIR__ . '/templates/cerrar.php';
     }
@@ -279,7 +275,8 @@ class AlimentosController extends AbstractController
             }
         }
 
-        $params['log'] = $m->conectado(false);
+        $session= new Session();
+        $params['log'] = $session->get('usuario');
 
         return $this->render('alimentos/formInsertar.html.twig', $params);
     }
@@ -298,7 +295,8 @@ class AlimentosController extends AbstractController
             $params['resultado'] = $m->buscarAlimentosPorNombre($_POST['nombre']);
         }
 
-        $params['log'] = $m->conectado(false);
+        $session= new Session();
+        $params['log'] = $session->get('usuario');
 
         return $this->render('alimentos/buscarPorNombre.html.twig', $params);
     }
@@ -321,7 +319,8 @@ class AlimentosController extends AbstractController
             }
         }
 
-        $params['log'] = $m->conectado(false);
+        $session= new Session();
+        $params['log'] = $session->get('usuario');
 
         return $this->render('alimentos/buscarPorEnergia.html.twig', $params);
     }
@@ -346,7 +345,8 @@ class AlimentosController extends AbstractController
             }
         }
 
-        $params['log'] = $m->conectado(false);
+        $session= new Session();
+        $params['log'] = $session->get('usuario');
 
         return $this->render('alimentos/buscarAlimentosCombinada.html.twig', $params);
     }
@@ -363,9 +363,8 @@ class AlimentosController extends AbstractController
 
         $alimento = $m->dameAlimento($id, true);
 
-        if(!$alimento)
-        {
-          throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+        if (!$alimento) {
+            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
         }
 
         $params = $alimento;
@@ -373,5 +372,46 @@ class AlimentosController extends AbstractController
         $params['log'] = $m->conectado(false);
 
         return $this->render('alimentos/verAlimentos.html.twig', $params);
+    }
+
+    public function verXML()
+    {
+        $m = new Model(
+            Config::$mvc_bd_nombre,
+            Config::$mvc_bd_usuario,
+            Config::$mvc_bd_clave,
+            Config::$mvc_bd_hostname
+        );
+
+        $params = array(
+            'alimentos' => $m->dameAlimentos(),
+        );
+
+        $intro = $params['alimentos'][0];
+        $archivoXML = "archivoXML.xml";
+        $cabeceraXML = '<?xml version="1.0">';
+        $inicio = "<alimento>";
+        $fin = "</alimento>";
+        $nombre = "<nombre>".$intro['nombre']."</nombre>";
+        $energia = "<energia>".$intro['energia']."</energia>";
+        $proteinas = "<proteinas>".$intro['proteina']."</proteinas>";
+        $hc = "<hc>".$intro['hidratocarbono']."</hc>";
+        $fibra = "<fibra>".$intro['fibra']."</fibra>";
+        $grasa = "<grasa>".$intro['grasatotal']."</grasa>";
+        
+
+        if(file_exists($archivoXML)){
+            $ft = fopen($archivoXML, "w+");
+            fwrite($ft, $cabeceraXML."\n".$inicio."\n".$nombre."\n".$energia."\n".$proteinas."\n".$hc."\n".$fibra."\n".$grasa."\n".$fin);
+            fclose($ft);
+        }else{
+            $ft = fopen($archivoXML, "w");
+            fwrite($ft, $cabeceraXML."\n".$inicio."\n".$nombre."\n".$energia."\n".$proteinas."\n".$hc."\n".$fibra."\n".$grasa."\n".$fin);
+            fclose($ft);
+        }
+
+        $response = $this->forward('App\Controller\AlimentosController::listar');
+        return $response;
+
     }
 }
