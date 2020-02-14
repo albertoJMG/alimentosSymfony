@@ -1,9 +1,9 @@
-<?xml version="1.0">
+<?xml version='1.0' encoding='UTF-8'?>
 <alimento>
-<nombre>Patata</nombre>
-<energia>2</energia>
-<proteinas>2</proteinas>
-<hc>2</hc>
-<fibra>2</fibra>
-<grasa>2</grasa>
+<nombre>Mac</nombre>
+<energia>1500</energia>
+<proteinas>15</proteinas>
+<hc>15</hc>
+<fibra>15</fibra>
+<grasa>15</grasa>
 </alimento>

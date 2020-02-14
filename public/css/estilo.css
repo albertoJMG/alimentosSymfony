@@ -16,7 +16,7 @@ ul.navbar {
     width: 9em
 }
 
-h1 {
+h1, h2 {
     font-family: Helvetica, Geneva, Arial,
         SunSans-Regular, sans-serif
 }
@@ -51,4 +51,10 @@ address {
     margin: auto;
     width: auto;
     min-height: 400px;
+}
+
+textarea{
+    background-color: #d8da3d;
+    border: none;
+    resize: none;
 }

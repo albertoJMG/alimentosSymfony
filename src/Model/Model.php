@@ -52,6 +52,7 @@ class Model
         while ($row = mysqli_fetch_assoc($result)) {
             $alimentos[] = $row;
         }
+        mysqli_close($this->conexion);
 
         return $alimentos;
     }
@@ -68,7 +69,7 @@ class Model
         while ($row = mysqli_fetch_assoc($result)) {
             $alimentos[] = $row;
         }
-
+        mysqli_close($this->conexion);
         return $alimentos;
     }
     public function buscarAlimentosCombinada($energia, $nombre)
@@ -83,29 +84,11 @@ class Model
         while ($row = mysqli_fetch_assoc($result)) {
             $alimentos[] = $row;
         }
-
+        mysqli_close($this->conexion);
         return $alimentos;
     }
 
-    // public function buscarUsuario($nombre,$pass)
-    //  {
-    //      $nombre = htmlspecialchars($nombre);
-    //  $pass = htmlspecialchars($pass);
-    //      $sql = "select * from usuarios where nombre='". $nombre . "' and pass='" . $pass . "'";
-
-    //      $result = mysqli_query($this->conexion,$sql );
-
-    //      $usuarios = array();
-    //      while ($row = mysqli_fetch_assoc($result))
-    //      {
-    //          $usuarios[] = $row;
-    //      }
-
-    //      return $usuarios;
-    //  }
-
-
-    public function dameAlimento($id)
+    public function dameAlimento($id, $close)
     {
         $id = htmlspecialchars($id);
 
@@ -115,6 +98,10 @@ class Model
 
         $alimentos = array();
         $row = mysqli_fetch_assoc($result);
+        if($close){
+            mysqli_close($this->conexion);
+        }
+        
 
         return $row;
     }
@@ -132,6 +119,7 @@ class Model
             $n . "'," . $e . "," . $p . "," . $hc . "," . $f . "," . $g . ")";
 
         $result = mysqli_query($this->conexion, $sql);
+        mysqli_close($this->conexion);
 
         return $result;
     }
@@ -149,7 +137,7 @@ class Model
     public function modificarAlimento($n, $e, $p, $hc, $f, $g, $id)
     {
         $sql = "update alimentos set nombre='" . $n . "', energia=" . $e . ", proteina=" . $p . ", hidratocarbono=" . $hc . ", fibra=" . $f . ", grasatotal=" . $g . " where id=" . $id;
-        $result = mysqli_query($this->conexion, $sql);
+        mysqli_query($this->conexion, $sql);
         mysqli_close($this->conexion);
     }
 
@@ -202,6 +190,8 @@ class Model
         if (isset($_SESSION['usuario'])) {
             return $_SESSION['usuario'];
         }
+
+        
         
     }
 }

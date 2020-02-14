@@ -1,0 +1,16 @@
+{% extends 'alimentos/layout.html.twig' %}
+
+{% block contenido %}
+    <h2>XML de - {{ nombre }} - </h2>
+    <textarea rows="10" cols="50" >
+    <?xml version="1.0" encoding="UTF-8"?>
+    <alimento>
+        <nombre>{{ nombre }}</nombre>
+        <energia>{{ energia }}</energia>
+        <proteinas>{{ proteina }}</proteinas>
+        <hidratosCarbono>{{ hidratocarbono}}</hidratosCarbono>
+        <fibra>{{ fibra }}</fibra>
+        <grasa>{{ grasatotal}}</grasa>
+    </alimento>
+    </textarea>
+{% endblock %}
