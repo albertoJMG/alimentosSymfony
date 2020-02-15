@@ -236,8 +236,11 @@ class AlimentosController extends AbstractController
 
     public function cerrar()
     {
-        session_unset();
-        session_destroy();
+        //session_unset();
+        //session_destroy();
+        $session = new Session();
+        $session->get('usuario');
+        $session->invalidate();
         $response = $this->forward('App\Controller\AlimentosController::inicio');
         return $response;
         //require __DIR__ . '/templates/cerrar.php';
