@@ -136,7 +136,7 @@ class AlimentosController extends AbstractController
     {
         $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario, Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
         $session = new Session();
-        
+
         $params = array(
             'alimentos' => $m->dameAlimentos(),
         );
@@ -154,8 +154,6 @@ class AlimentosController extends AbstractController
                 return $response;
             }
         }
-        
-        
     }
 
     public function login()
@@ -180,7 +178,7 @@ class AlimentosController extends AbstractController
             } else {
                 $session = new Session();
                 $session->set('usuario', $_POST['nomUsuario']);
-                $params['log'] = $session->get('usuario');
+                //$params['log'] = $session->get('usuario');
 
                 $response = $this->forward('App\Controller\AlimentosController::inicio');
                 return $response;
@@ -260,26 +258,32 @@ class AlimentosController extends AbstractController
 
         $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario, Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
         $session = new Session();
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            // comprobar campos formulario
-            if ($m->validarDatos($_POST['nombre'], $_POST['energia'], $_POST['proteina'], $_POST['hc'], $_POST['fibra'], $_POST['grasa'])) {
-                $m->insertarAlimento($_POST['nombre'], $_POST['energia'], $_POST['proteina'], $_POST['hc'], $_POST['fibra'], $_POST['grasa']);
-            } else {
-                $params = array(
-                    'nombre' => $_POST['nombre'],
-                    'energia' => $_POST['energia'],
-                    'proteina' => $_POST['proteina'],
-                    'hc' => $_POST['hc'],
-                    'fibra' => $_POST['fibra'],
-                    'grasa' => $_POST['grasa'],
-                );
-                $params['mensaje'] = 'No se ha podido insertar el alimento. Revisa el formulario';
-            }
-        }
-      
         $params['log'] = $session->get('usuario');
+
+        if ($params['log'] != "") {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+                // comprobar campos formulario
+                if ($m->validarDatos($_POST['nombre'], $_POST['energia'], $_POST['proteina'], $_POST['hc'], $_POST['fibra'], $_POST['grasa'])) {
+                    $m->insertarAlimento($_POST['nombre'], $_POST['energia'], $_POST['proteina'], $_POST['hc'], $_POST['fibra'], $_POST['grasa']);
+                } else {
+                    $params = array(
+                        'nombre' => $_POST['nombre'],
+                        'energia' => $_POST['energia'],
+                        'proteina' => $_POST['proteina'],
+                        'hc' => $_POST['hc'],
+                        'fibra' => $_POST['fibra'],
+                        'grasa' => $_POST['grasa'],
+                    );
+                    $params['mensaje'] = 'No se ha podido insertar el alimento. Revisa el formulario';
+                }
+            }
+        } else {
+            $response = $this->forward('App\Controller\AlimentosController::inicio');
+            return $response;
+        }
+
+        // $params['log'] = $session->get('usuario');
 
         return $this->render('alimentos/formInsertar.html.twig', $params);
     }
@@ -397,7 +401,7 @@ class AlimentosController extends AbstractController
         $session = new Session();
         $params['log'] = $session->get('usuario');
 
-        
+
         $archivoXML = "archivoXML.xml";
         $cabeceraXML = "<?xml version='1.0' encoding='UTF-8'?>";
         $inicio = "<alimento>";
@@ -419,7 +423,7 @@ class AlimentosController extends AbstractController
             fwrite($ft, $cabeceraXML . "\n" . $inicio . "\n" . $nombre . "\n" . $energia . "\n" . $proteinas . "\n" . $hc . "\n" . $fibra . "\n" . $grasa . "\n" . $fin);
             fclose($ft);
         }
-        
+
 
         // $response = $this->forward('App\Controller\AlimentosController::listar');
         // return $response;

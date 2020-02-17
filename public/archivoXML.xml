@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <alimento>
-<nombre>Mac</nombre>
-<energia>1500</energia>
-<proteinas>15</proteinas>
-<hc>15</hc>
-<fibra>15</fibra>
-<grasa>15</grasa>
+<nombre>Aceituna</nombre>
+<energia>12</energia>
+<proteinas>12</proteinas>
+<hc>12</hc>
+<fibra>12</fibra>
+<grasa>21</grasa>
 </alimento>
