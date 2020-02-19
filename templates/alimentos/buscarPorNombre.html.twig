@@ -15,6 +15,11 @@
 
 	{% if resultado %}
 		{% include 'alimentos/tablaAlimentos.html.twig' with {'alimentos': resultado} %}
+	{% else %}
+		<b>
+			<span style="color: red;">{{ mensaje }}
+			</span>
+		</b>
 	{% endif %}
 
 {% endblock %}

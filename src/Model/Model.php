@@ -66,9 +66,12 @@ class Model
         $result = mysqli_query($this->conexion, $sql);
 
         $alimentos = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $alimentos[] = $row;
+        if($result != false){
+            while ($row = mysqli_fetch_assoc($result)) {
+                $alimentos[] = $row;
+            }
         }
+        
         mysqli_close($this->conexion);
         return $alimentos;
     }
@@ -81,8 +84,10 @@ class Model
         $result = mysqli_query($this->conexion, $sql);
 
         $alimentos = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $alimentos[] = $row;
+        if($result != false){
+            while ($row = mysqli_fetch_assoc($result)) {
+                $alimentos[] = $row;
+            }
         }
         mysqli_close($this->conexion);
         return $alimentos;

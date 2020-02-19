@@ -293,6 +293,7 @@ class AlimentosController extends AbstractController
         $params = array(
             'nombre' => '',
             'resultado' => array(),
+            'mensaje' => '',
         );
 
         $m = new Model(Config::$mvc_bd_nombre, Config::$mvc_bd_usuario, Config::$mvc_bd_clave, Config::$mvc_bd_hostname);
@@ -300,6 +301,9 @@ class AlimentosController extends AbstractController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $params['nombre'] = $_POST['nombre'];
             $params['resultado'] = $m->buscarAlimentosPorNombre($_POST['nombre']);
+            if (count($params['resultado']) == 0) {
+                $params['mensaje'] = 'No se han encontrado alimentos con el nombre indicado';
+            }
         }
 
         $session = new Session();
