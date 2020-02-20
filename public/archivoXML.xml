@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <alimento>
-<nombre>Mayonesa</nombre>
-<energia>15</energia>
-<proteinas>15</proteinas>
-<hc>15</hc>
-<fibra>65</fibra>
-<grasa>15</grasa>
+<nombre>Melocotón</nombre>
+<energia>21</energia>
+<proteinas>21</proteinas>
+<hc>21</hc>
+<fibra>21</fibra>
+<grasa>21</grasa>
 </alimento>

@@ -6,9 +6,14 @@
 	</tr>
 	{% for alimento in alimentos %}
 		<tr>
-			<td>{{ alimento.nombre }}</td>
+			<td><a href="{{ path('app_alimentos_verAlimentos', {'id': alimento.id}) }}" >{{ alimento.nombre }}</a></td>
 			<td>{{ alimento.energia }}</td>
 			<td>{{ alimento.grasatotal }}</td>
+			{% if log != "" %}
+			<td><a href="{{ path('app_alimentos_editarAlimento', {'id': alimento.id}) }}"> Editar</a></td>
+			<td><a href="{{ path('app_alimentos_borrar', {'id': alimento.id, 'eliminar': true}) }}">Borrar</a></td>
+			{% endif %}
+			<td><a href="{{ path('app_alimentos_verXML', {'id': alimento.id}) }}">XML</a></td>
 		</tr>
 	{% endfor %}
 
